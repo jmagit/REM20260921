@@ -1,0 +1,85 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>echo Paso 1</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command>echo Paso 2
+echo Fichero demo &gt;&gt; demo.txt</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+    <hudson.tasks.Shell>
+      <command>echo Paso 3</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+    <sp.sd.fileoperations.FileOperationsBuilder plugin="file-operations@439.vdc9d3b_d74b_d9">
+      <fileOperations>
+        <sp.sd.fileoperations.FileCopyOperation>
+          <includes>*.txt</includes>
+          <excludes></excludes>
+          <targetLocation>/externo</targetLocation>
+          <flattenFiles>false</flattenFiles>
+          <renameFiles>false</renameFiles>
+          <sourceCaptureExpression></sourceCaptureExpression>
+          <targetNameExpression></targetNameExpression>
+          <useDefaultExcludes>true</useDefaultExcludes>
+        </sp.sd.fileoperations.FileCopyOperation>
+      </fileOperations>
+    </sp.sd.fileoperations.FileOperationsBuilder>
+  </builders>
+  <publishers>
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2038.v7b_8817a_499d9">
+      <recipientList>$DEFAULT_RECIPIENTS</recipientList>
+      <configuredTriggers>
+        <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+          <email>
+            <subject>$PROJECT_DEFAULT_SUBJECT</subject>
+            <body>$PROJECT_DEFAULT_CONTENT</body>
+            <recipientProviders>
+              <hudson.plugins.emailext.plugins.recipients.DevelopersRecipientProvider/>
+            </recipientProviders>
+            <attachmentsPattern></attachmentsPattern>
+            <inlineAttachmentsPattern></inlineAttachmentsPattern>
+            <attachBuildLog>false</attachBuildLog>
+            <compressBuildLog>false</compressBuildLog>
+            <replyTo>$PROJECT_DEFAULT_REPLYTO</replyTo>
+            <contentType>project</contentType>
+          </email>
+        </hudson.plugins.emailext.plugins.trigger.FailureTrigger>
+      </configuredTriggers>
+      <contentType>default</contentType>
+      <defaultSubject>$DEFAULT_SUBJECT</defaultSubject>
+      <defaultContent>$DEFAULT_CONTENT</defaultContent>
+      <attachmentsPattern></attachmentsPattern>
+      <inlineAttachmentsPattern></inlineAttachmentsPattern>
+      <presendScript>$DEFAULT_PRESEND_SCRIPT</presendScript>
+      <postsendScript>$DEFAULT_POSTSEND_SCRIPT</postsendScript>
+      <attachBuildLog>false</attachBuildLog>
+      <compressBuildLog>false</compressBuildLog>
+      <replyTo>$DEFAULT_REPLYTO</replyTo>
+      <from></from>
+      <saveOutput>false</saveOutput>
+      <disabled>false</disabled>
+      <throttlingEnabled>false</throttlingEnabled>
+    </hudson.plugins.emailext.ExtendedEmailPublisher>
+    <hudson.tasks.Mailer plugin="mailer@534.v1b_36f5864073">
+      <recipients>desarrollador@example.com</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>true</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+  <buildWrappers/>
+</project>
