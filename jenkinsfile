@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    tools {
+      maven 'maven_lts'
+    }
+    
+    stages {
+        stage('Preparation') { // for display purposes
+            steps {
+            // Get some code from a GitHub repository
+                git 'https://github.com/jmagit/demos-devops.git'
+            }
+        }
+        stage('Compile') {
+            steps {
+                sh 'mvn -Dmaven.test.failure.ignore clean compile'
+            }
+        }
+        stage('Unit test') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn package -DskipTests'
+            }
+            post {
+                success {
+                    archiveArtifacts 'target/*.jar'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'mvn install -DskipTests'
+            }
+        }
+    }
+    post {
+        always {
+             mail to: 'team@example.com',
+             subject: "Finalizado Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Status ${currentBuild.currentResult} - Something is wrong with ${env.BUILD_URL}"
+        }
+    }
+}
