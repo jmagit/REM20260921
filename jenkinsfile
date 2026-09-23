@@ -42,6 +42,11 @@ pipeline {
                 sh 'mvn install -DskipTests'
             }
         }
+        stage('Documentacion') {
+            steps {
+                sh 'mvn site'
+            }
+        }
     }
     post {
         always {
