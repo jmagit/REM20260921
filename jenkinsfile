@@ -41,16 +41,16 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
-            steps {
-                sh 'mvn install -DskipTests'
-            }
-        }
-        stage('Documentacion') {
-            steps {
-                sh 'mvn site'
-            }
-        }
+        // stage('Deploy') {
+        //     steps {
+        //         sh 'mvn install -DskipTests'
+        //     }
+        // }
+        // stage('Documentacion') {
+        //     steps {
+        //         sh 'mvn site'
+        //     }
+        // }
     }
     post {
         always {
