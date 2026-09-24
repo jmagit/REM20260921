@@ -1,0 +1,56 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<matrix-project plugin="matrix-project@917.v22eda_817646e">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <axes>
+    <hudson.matrix.TextAxis>
+      <name>PLATFORM</name>
+      <orientation>AUTO</orientation>
+      <values>
+        <string>linux</string>
+        <string>windows</string>
+        <string>mac</string>
+      </values>
+    </hudson.matrix.TextAxis>
+    <hudson.matrix.TextAxis>
+      <name>BROWSER</name>
+      <orientation>AUTO</orientation>
+      <values>
+        <string>chrome</string>
+        <string>edge</string>
+        <string>firefox</string>
+        <string>safari</string>
+      </values>
+    </hudson.matrix.TextAxis>
+    <hudson.matrix.TextAxis>
+      <name>ARCHITECTURE</name>
+      <orientation>AUTO</orientation>
+      <values>
+        <string>32-bit</string>
+        <string>64-bit</string>
+      </values>
+    </hudson.matrix.TextAxis>
+  </axes>
+  <combinationFilter>!(PLATFORM==&quot;linux&quot; &amp;&amp; BROWSER==&quot;safari&quot;)</combinationFilter>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>echo Construyendo $PLATFORM $BROWSER $ARCHITECTURE</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers/>
+  <buildWrappers/>
+  <executionStrategy class="hudson.matrix.DefaultMatrixExecutionStrategyImpl">
+    <runSequentially>false</runSequentially>
+    <scheduleDelayMillis>0</scheduleDelayMillis>
+  </executionStrategy>
+</matrix-project>

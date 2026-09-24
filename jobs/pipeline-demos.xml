@@ -1,0 +1,97 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<flow-definition plugin="workflow-job@1602.v2a_70b_80a_2396">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@2.2293.v6e7193cec599"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@2.2293.v6e7193cec599">
+      <jobProperties/>
+      <triggers/>
+      <parameters>
+        <string>Tipo</string>
+      </parameters>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.ChoiceParameterDefinition>
+          <name>Tipo</name>
+          <choices>
+            <string>Hola</string>
+            <string>Adiós</string>
+          </choices>
+        </hudson.model.ChoiceParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@4383.v04fa_a_3d67b_d9">
+    <script>pipeline {
+    agent any
+
+    tools {
+      maven &apos;maven_lts&apos;
+    }
+    
+     environment {
+      NOMBRE = &quot;mundo&quot;
+    }
+    parameters {
+      choice choices: [&apos;Hola&apos;, &apos;Adiós&apos;], name: &apos;Tipo&apos;
+    }
+ 
+    stages {
+        stage(&apos;Preparation&apos;) { // for display purposes
+            steps {
+            // Get some code from a GitHub repository
+                // git &apos;https://github.com/jmagit/demos-devops.git&apos;
+                echo &quot;${params.Tipo} ${NOMBRE}&quot;
+            }
+        }
+        stage(&apos;Compile&apos;) {
+            steps {
+                  echo &apos;Hola ${NOMBRE}&apos;
+            //   sh &apos;mvn -Dmaven.test.failure.ignore clean compile&apos;
+            }
+        }
+        // stage(&apos;Unit test&apos;) {
+        //     steps {
+        //         sh &apos;mvn test&apos;
+        //     }
+        //     post {
+        //         always {
+        //             junit &apos;**/target/surefire-reports/*.xml&apos;
+        //         }
+        //     }
+        // }
+        // stage(&apos;Build&apos;) {
+        //     steps {
+        //         sh &apos;mvn package -DskipTests&apos;
+        //     }
+        //     post {
+        //         success {
+        //             archiveArtifacts &apos;target/*.jar&apos;
+        //         }
+        //     }
+        // }
+        // stage(&apos;Deploy&apos;) {
+        //     steps {
+        //         sh &apos;mvn install -DskipTests&apos;
+        //     }
+        // }
+    }
+    post {
+        always {
+             mail to: &apos;team@example.com&apos;,
+             subject: &quot;Finalizado Pipeline: ${currentBuild.fullDisplayName}&quot;,
+             body: &quot;Status ${currentBuild.currentResult} - Something is wrong with ${env.BUILD_URL}&quot;
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
