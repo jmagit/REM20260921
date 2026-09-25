@@ -1,0 +1,83 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<flow-definition plugin="workflow-job@1602.v2a_70b_80a_2396">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@2.2293.v6e7193cec599"/>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction plugin="pipeline-model-definition@2.2293.v6e7193cec599">
+      <jobProperties/>
+      <triggers/>
+      <parameters/>
+      <options/>
+    </org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobPropertyTrackerAction>
+  </actions>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@4383.v04fa_a_3d67b_d9">
+    <script>pipeline {
+    // agent any
+    agent {
+        docker {
+            image &apos;maven:3.9.16-eclipse-temurin-25-noble&apos;
+            args &apos;-v maven-repository:/root/.m2&apos;
+        }
+    }
+    environment {
+      repositorio = &quot;https://github.com/jenkins-docs/simple-java-maven-app.git&quot;
+      correo = &quot;otro@example.com&quot;
+    }
+    // tools {
+    //   maven &apos;maven_lts&apos;
+    // }
+    
+    stages {
+        stage(&apos;Preparation&apos;) { // for display purposes
+            steps {
+            // Get some code from a GitHub repository
+                git repositorio
+            }
+        }
+        stage(&apos;Compile&apos;) {
+            steps {
+                sh &apos;mvn -Dmaven.test.failure.ignore clean compile&apos;
+            }
+        }
+        // stage(&apos;Unit test&apos;) {
+        //     steps {
+        //         sh &apos;mvn test&apos;
+        //     }
+        //     post {
+        //         always {
+        //             junit &apos;**/target/surefire-reports/*.xml&apos;
+        //         }
+        //     }
+        // }
+        // stage(&apos;Build&apos;) {
+        //     steps {
+        //         sh &apos;mvn package -DskipTests&apos;
+        //     }
+        //     post {
+        //         success {
+        //             archiveArtifacts &apos;target/*.jar&apos;
+        //         }
+        //     }
+        // }
+        // stage(&apos;Deploy&apos;) {
+        //     steps {
+        //         sh &apos;mvn install -DskipTests&apos;
+        //     }
+        // }
+    }
+    post {
+        always {
+             mail to: correo,
+             subject: &quot;Finalizado Pipeline: ${currentBuild.fullDisplayName}&quot;,
+             body: &quot;Status ${currentBuild.currentResult} - Something is wrong with ${env.BUILD_URL}&quot;
+        }
+    }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
